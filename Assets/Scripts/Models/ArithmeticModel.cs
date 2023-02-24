@@ -10,7 +10,7 @@ public class ArithmeticModel
     private int termOne;
     private int termTwo;
 
-    public ArithmeticModel(int minGeneratedResult, int maxGeneratedResult, int minTermValue, int maxTermValue)
+    public ArithmeticModel(int minGeneratedResult, int maxGeneratedResult, int minTermValue, int maxTermValue, IStoreService storeService)
     {
         this.minGeneratedResult = minGeneratedResult;
         this.maxGeneratedResult = maxGeneratedResult;
