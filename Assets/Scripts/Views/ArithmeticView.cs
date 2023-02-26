@@ -18,6 +18,10 @@ public class ArithmeticView : MonoBehaviour, IArithmeticView
     private Text incorrectAttemptText;
     [SerializeField]
     private Color errorColor = Color.red;
+    [SerializeField]
+    private Button settingsButton;
+    [SerializeField]
+    private SettingsPopupView settingsPopupPrefab;
 
     private void Start()
     {
@@ -25,6 +29,13 @@ public class ArithmeticView : MonoBehaviour, IArithmeticView
 
         correctAttemptText.color = detailText.color;
         incorrectAttemptText.color = errorColor;
+
+        settingsButton.onClick.AddListener(OnSettingsKeyClick);
+    }
+
+    private void OnDestroy()
+    {
+        settingsButton.onClick.RemoveListener(OnSettingsKeyClick);
     }
 
     #region IArithmeticView
@@ -49,6 +60,8 @@ public class ArithmeticView : MonoBehaviour, IArithmeticView
 
     public event EventHandler AfterResultDetail;
 
+    public event EventHandler<ISettingsPopupView> SettingsKeyClick;
+
     #endregion
 
     private IEnumerator ShowDetail(bool isRight)
@@ -67,5 +80,12 @@ public class ArithmeticView : MonoBehaviour, IArithmeticView
         detailText.color = prevColor;
 
         AfterResultDetail?.Invoke(this, EventArgs.Empty);
+    }
+
+    private void OnSettingsKeyClick()
+    {
+        SettingsPopupView popup = Instantiate(settingsPopupPrefab);
+        popup.transform.SetParent(transform.parent.parent, false);
+        SettingsKeyClick?.Invoke(this, popup);
     }
 }

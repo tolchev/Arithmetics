@@ -31,6 +31,12 @@ public class KeyboardView : MonoBehaviour, IKeyboardView
         enterKey.onClick.AddListener(OnEnterKeyClick);
     }
 
+    private void OnDestroy()
+    {
+        backspaceKey.onClick.RemoveListener(OnBackspaceKeyClick);
+        enterKey.onClick.RemoveListener(OnEnterKeyClick);
+    }
+
     #region IKeyboardView
 
     public event EventHandler<int> DigitKeyClick;

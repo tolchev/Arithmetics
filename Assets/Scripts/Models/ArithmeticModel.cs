@@ -52,10 +52,17 @@ public class ArithmeticModel
             CorrectAttempt++;
         }
 
-        storeService.Save(AllAttempt, CorrectAttempt);
+        SaveToStore();
 
         Start();
         return result;
+    }
+
+    public void ResetAttempts()
+    {
+        AllAttempt = 0;
+        CorrectAttempt = 0;
+        SaveToStore();
     }
 
     public int AllAttempt { get; private set; }
@@ -65,5 +72,10 @@ public class ArithmeticModel
     private int GenerateTerm()
     {
         return Random.Range(minTermValue, maxTermValue + 1);
+    }
+
+    private void SaveToStore()
+    {
+        storeService.Save(AllAttempt, CorrectAttempt);
     }
 }

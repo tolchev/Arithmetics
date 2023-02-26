@@ -2,8 +2,9 @@
 
 public class ArithmeticPresenter : IDisposable
 {
-    IArithmeticView view;
-    ArithmeticModel model;
+    private readonly IArithmeticView view;
+    private readonly ArithmeticModel model;
+    private SettingsPopupPresenter presenter = null;
 
     public ArithmeticPresenter(IArithmeticView view, ArithmeticModel model)
     {
@@ -16,12 +17,25 @@ public class ArithmeticPresenter : IDisposable
         model.Start();
         view.SetExpression(model.Expression);
         view.SetResultDetailWithoutAnimation(model.CorrectAttempt, model.IncorrectAttempt);
+
+        view.SettingsKeyClick += SettingsKeyClick;
+    }
+
+    private void SettingsKeyClick(object sender, ISettingsPopupView popupView)
+    {
+        void RefreshUI()
+        {
+            view.SetResultDetailWithoutAnimation(model.CorrectAttempt, model.IncorrectAttempt);
+        }
+
+        presenter = new SettingsPopupPresenter(popupView, model, RefreshUI);
     }
 
     public void Dispose()
     {
         Messenger<int>.RemoveListener(MessageEventNames.CheckResultEvent, CheckResult);
         view.AfterResultDetail -= AfterResultDetail;
+        presenter?.Dispose();
     }
 
     private void CheckResult(int result)

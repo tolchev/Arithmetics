@@ -6,4 +6,5 @@ public interface IArithmeticView
     void SetResultDetail(bool isRight, int correctAttempt, int incorrectAttempt);
     void SetResultDetailWithoutAnimation(int correctAttempt, int incorrectAttempt);
     event EventHandler AfterResultDetail;
+    event EventHandler<ISettingsPopupView> SettingsKeyClick;
 }
