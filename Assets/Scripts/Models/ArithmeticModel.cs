@@ -6,6 +6,7 @@ public class ArithmeticModel
     private readonly int maxGeneratedResult;
     private readonly int minTermValue;
     private readonly int maxTermValue;
+    private readonly IStoreService storeService;
 
     private int termOne;
     private int termTwo;
@@ -16,6 +17,10 @@ public class ArithmeticModel
         this.maxGeneratedResult = maxGeneratedResult;
         this.minTermValue = minTermValue;
         this.maxTermValue = maxTermValue;
+        this.storeService = storeService ?? throw new System.ArgumentNullException(nameof(storeService));
+
+        AllAttempt = storeService.AllAttempt;
+        CorrectAttempt = storeService.CorrectAttempt;
     }
 
     public string Expression => $"{termOne}+{termTwo}=?";
@@ -46,6 +51,8 @@ public class ArithmeticModel
         {
             CorrectAttempt++;
         }
+
+        storeService.Save(AllAttempt, CorrectAttempt);
 
         Start();
         return result;

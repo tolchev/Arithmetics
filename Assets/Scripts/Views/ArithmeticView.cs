@@ -25,8 +25,6 @@ public class ArithmeticView : MonoBehaviour, IArithmeticView
 
         correctAttemptText.color = detailText.color;
         incorrectAttemptText.color = errorColor;
-
-        SetAttempts(0, 0);
     }
 
     #region IArithmeticView
@@ -38,20 +36,20 @@ public class ArithmeticView : MonoBehaviour, IArithmeticView
 
     public void SetResultDetail(bool isRight, int correctAttempt, int incorrectAttempt)
     {
-        SetAttempts(correctAttempt, incorrectAttempt);
+        SetResultDetailWithoutAnimation(correctAttempt, incorrectAttempt);
 
         StartCoroutine(ShowDetail(isRight));
+    }
+
+    public void SetResultDetailWithoutAnimation(int correctAttempt, int incorrectAttempt)
+    {
+        correctAttemptText.text = $"Correct: {correctAttempt}";
+        incorrectAttemptText.text = $"Incorrect: {incorrectAttempt}";
     }
 
     public event EventHandler AfterResultDetail;
 
     #endregion
-
-    private void SetAttempts(int correctAttempt, int incorrectAttempt)
-    {
-        correctAttemptText.text = $"Correct: {correctAttempt}";
-        incorrectAttemptText.text = $"Incorrect: {incorrectAttempt}";
-    }
 
     private IEnumerator ShowDetail(bool isRight)
     {

@@ -15,6 +15,7 @@ public class ArithmeticPresenter : IDisposable
 
         model.Start();
         view.SetExpression(model.Expression);
+        view.SetResultDetailWithoutAnimation(model.CorrectAttempt, model.IncorrectAttempt);
     }
 
     public void Dispose()
