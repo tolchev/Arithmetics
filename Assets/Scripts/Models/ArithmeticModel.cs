@@ -11,6 +11,8 @@ public class ArithmeticModel
     private int termOne;
     private int termTwo;
 
+    private const int maxIterationCount = 30;
+
     public ArithmeticModel(int minGeneratedResult, int maxGeneratedResult, int minTermValue, int maxTermValue, IStoreService storeService)
     {
         this.minGeneratedResult = minGeneratedResult;
@@ -29,13 +31,15 @@ public class ArithmeticModel
     {
         bool created = false;
 
+        int curIterationCount = 0;
+
         while (!created)
         {
             termOne = GenerateTerm();
             termTwo = GenerateTerm();
 
             int result = termOne + termTwo;
-            if (result >= minGeneratedResult && result <= maxGeneratedResult)
+            if (result >= minGeneratedResult && result <= maxGeneratedResult || curIterationCount++ >= maxIterationCount)
             {
                 created = true;
             }

@@ -12,5 +12,6 @@ class PrefsStoreService : IStoreService
     {
         PlayerPrefs.SetInt(allAttemptKey, allAttempt);
         PlayerPrefs.SetInt(correctAttemptKey, correctAttempt);
+        PlayerPrefs.Save();
     }
 }

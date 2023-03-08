@@ -5,6 +5,21 @@ using UnityEngine.UI;
 
 public class ArithmeticView : MonoBehaviour, IArithmeticView
 {
+    class FPSCalculator
+    {
+        private float deltaTime = 0;
+        private float fps = 0;
+
+        public void Update()
+        {
+            deltaTime += Time.deltaTime;
+            deltaTime /= 2;
+            fps = 1 / deltaTime;
+        }
+
+        public float FPS => fps;
+    }
+
     private const string okText = "That's right!";
     private const string errorText = "Wrong!";
 
@@ -22,6 +37,10 @@ public class ArithmeticView : MonoBehaviour, IArithmeticView
     private Button settingsButton;
     [SerializeField]
     private SettingsPopupView settingsPopupPrefab;
+    [SerializeField]
+    private Text fpsText;
+
+    private FPSCalculator fpsCalculator;
 
     private void Start()
     {
@@ -31,6 +50,14 @@ public class ArithmeticView : MonoBehaviour, IArithmeticView
         incorrectAttemptText.color = errorColor;
 
         settingsButton.onClick.AddListener(OnSettingsKeyClick);
+
+        fpsCalculator = new FPSCalculator();
+    }
+
+    private void Update()
+    {
+        fpsCalculator.Update();
+        fpsText.text = $"FPS {((int)fpsCalculator.FPS).ToString()}";
     }
 
     private void OnDestroy()
