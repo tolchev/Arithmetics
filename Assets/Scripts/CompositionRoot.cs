@@ -15,7 +15,8 @@ public class CompositionRoot : MonoBehaviour
         var keyboardModel = new KeyboardModel(2);
         keyboardPresenter = new KeyboardPresenter(keyboardView, keyboardModel);
 
-        var arithmeticModel = new ArithmeticModel(10, 20, 1, 10, new PrefsStoreService());
+        var arithmeticModel = new ArithmeticModel(10, 20, 1, 10, new IArithmeticStrategy[] { new AdditionStrategy(), new SubtractionStrategy() }, 
+            new RandomService(), new PrefsStoreService());
         arithmeticPresenter = new ArithmeticPresenter(arithmeticView, arithmeticModel);
     }
 
