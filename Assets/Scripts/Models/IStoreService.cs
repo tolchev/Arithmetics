@@ -2,5 +2,8 @@
 {
     int AllAttempt { get; }
     int CorrectAttempt { get; }
-    void Save(int allAttempt, int correctAttempt);
+    void SaveAttempts(int allAttempt, int correctAttempt);
+
+    ArithmeticTypes Operations { get; }
+    void SaveOperations(ArithmeticTypes operations);
 }

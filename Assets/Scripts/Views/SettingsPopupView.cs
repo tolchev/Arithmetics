@@ -6,6 +6,10 @@ using UnityEngine.UI;
 public class SettingsPopupView : MonoBehaviour, ISettingsPopupView, IPointerClickHandler
 {
     [SerializeField]
+    private Toggle addition;
+    [SerializeField]
+    private Toggle subtraction;
+    [SerializeField]
     private Toggle resetProgress;
     [SerializeField]
     private Button yesButton;
@@ -37,6 +41,18 @@ public class SettingsPopupView : MonoBehaviour, ISettingsPopupView, IPointerClic
     #endregion
 
     #region ISettingsPopupView
+
+    public bool Addition
+    {
+        get => addition.isOn;
+        set => addition.isOn = value;
+    }
+
+    public bool Subtraction
+    {
+        get => subtraction.isOn;
+        set => subtraction.isOn = value;
+    }
 
     public bool ResetProgress => resetProgress.isOn;
 

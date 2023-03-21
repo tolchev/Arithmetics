@@ -11,4 +11,5 @@
 
     public abstract string GetExpression();
     public abstract bool GetResult(int value);
+    public abstract ArithmeticTypes ArithmeticType { get; }
 }

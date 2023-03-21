@@ -1,3 +1,5 @@
+using System.Linq;
+
 public class ArithmeticModel
 {
     private readonly int minGeneratedResult;
@@ -25,6 +27,7 @@ public class ArithmeticModel
 
         AllAttempt = storeService.AllAttempt;
         CorrectAttempt = storeService.CorrectAttempt;
+        Operations = storeService.Operations;
     }
 
     public string Expression => currentStrategy.GetExpression();
@@ -37,7 +40,8 @@ public class ArithmeticModel
 
         while (!created)
         {
-            currentStrategy = strategies[randomService.Range(0, strategies.Length)];
+            var filteredStrategies = strategies.Where(s => Operations.HasFlag(s.ArithmeticType)).ToArray();
+            currentStrategy = filteredStrategies[randomService.Range(0, filteredStrategies.Length)];
 
             int termOne = GenerateTerm();
             int termTwo = GenerateTerm();
@@ -61,7 +65,7 @@ public class ArithmeticModel
             CorrectAttempt++;
         }
 
-        SaveToStore();
+        SaveAttemptsToStore();
 
         Start();
         return result;
@@ -71,20 +75,32 @@ public class ArithmeticModel
     {
         AllAttempt = 0;
         CorrectAttempt = 0;
-        SaveToStore();
+        SaveAttemptsToStore();
+    }
+
+    public void SaveOperations(ArithmeticTypes operations)
+    {
+        if (operations == ArithmeticTypes.Unknown)
+        {
+            operations = ArithmeticTypes.Addition | ArithmeticTypes.Subtraction;
+        }
+
+        Operations = operations;
+        storeService.SaveOperations(operations);
     }
 
     public int AllAttempt { get; private set; }
     public int CorrectAttempt { get; private set; }
     public int IncorrectAttempt => AllAttempt - CorrectAttempt;
+    public ArithmeticTypes Operations { get; private set; }
 
     private int GenerateTerm()
     {
         return randomService.Range(minTermValue, maxTermValue + 1);
     }
 
-    private void SaveToStore()
+    private void SaveAttemptsToStore()
     {
-        storeService.Save(AllAttempt, CorrectAttempt);
+        storeService.SaveAttempts(AllAttempt, CorrectAttempt);
     }
 }

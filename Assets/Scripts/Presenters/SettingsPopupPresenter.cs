@@ -13,6 +13,8 @@ public class SettingsPopupPresenter : IDisposable
         this.onYesCallback = onYesCallback ?? throw new ArgumentNullException(nameof(onYesCallback));
 
         view.OnYesClick += OnYesClick;
+        view.Addition = model.Operations.HasFlag(ArithmeticTypes.Addition);
+        view.Subtraction = model.Operations.HasFlag(ArithmeticTypes.Subtraction);
     }
 
     private void OnYesClick(object sender, EventArgs e)
@@ -21,6 +23,11 @@ public class SettingsPopupPresenter : IDisposable
         {
             model.ResetAttempts();
         }
+
+        ArithmeticTypes operations = (view.Addition ? ArithmeticTypes.Addition : ArithmeticTypes.Unknown)
+            | (view.Subtraction ? ArithmeticTypes.Subtraction : ArithmeticTypes.Unknown);
+
+        model.SaveOperations(operations);
         onYesCallback();
     }
 

@@ -5,10 +5,11 @@ public class ArithmeticModelTest
     class FakeStoreService : IStoreService
     {
         public int AllAttempt => 0;
-
         public int CorrectAttempt => 0;
+        public void SaveAttempts(int allAttempt, int correctAttempt) { }
 
-        public void Save(int allAttempt, int correctAttempt) { }
+        public ArithmeticTypes Operations => ArithmeticTypes.Unknown;
+        public void SaveOperations(ArithmeticTypes operations) { }
     }
 
     class FakeRandomService : IRandomService

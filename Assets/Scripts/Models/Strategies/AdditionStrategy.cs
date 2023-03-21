@@ -9,4 +9,6 @@
     {
         return value == TermOne + TermTwo;
     }
+
+    public override ArithmeticTypes ArithmeticType => ArithmeticTypes.Addition;
 }

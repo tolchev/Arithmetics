@@ -9,4 +9,6 @@
     {
         return value == TermOne;
     }
+
+    public override ArithmeticTypes ArithmeticType => ArithmeticTypes.Subtraction;
 }
