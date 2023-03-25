@@ -38,6 +38,8 @@ public class ArithmeticView : MonoBehaviour, IArithmeticView
     [SerializeField]
     private SettingsPopupView settingsPopupPrefab;
     [SerializeField]
+    private GameObject prizeObject;
+    [SerializeField]
     private Text fpsText;
 
     private FPSCalculator fpsCalculator;
@@ -45,6 +47,7 @@ public class ArithmeticView : MonoBehaviour, IArithmeticView
     private void Start()
     {
         detailText.text = string.Empty;
+        prizeObject.SetActive(false);
 
         correctAttemptText.color = detailText.color;
         incorrectAttemptText.color = errorColor;
@@ -72,11 +75,11 @@ public class ArithmeticView : MonoBehaviour, IArithmeticView
         expressionText.text = value;
     }
 
-    public void SetResultDetail(bool isRight, int correctAttempt, int incorrectAttempt)
+    public void SetResultDetail(bool isRight, int correctAttempt, int incorrectAttempt, bool showPrize)
     {
         SetResultDetailWithoutAnimation(correctAttempt, incorrectAttempt);
 
-        StartCoroutine(ShowDetail(isRight));
+        StartCoroutine(ShowDetail(isRight, showPrize));
     }
 
     public void SetResultDetailWithoutAnimation(int correctAttempt, int incorrectAttempt)
@@ -91,7 +94,7 @@ public class ArithmeticView : MonoBehaviour, IArithmeticView
 
     #endregion
 
-    private IEnumerator ShowDetail(bool isRight)
+    private IEnumerator ShowDetail(bool isRight, bool showPrize)
     {
         Color prevColor = detailText.color;
         detailText.text = isRight ? okText : errorText;
@@ -101,10 +104,14 @@ public class ArithmeticView : MonoBehaviour, IArithmeticView
             detailText.color = errorColor;
         }
 
+        prizeObject.SetActive(showPrize);
+
         yield return new WaitForSeconds(1.5f);
 
         detailText.text = string.Empty;
         detailText.color = prevColor;
+
+        prizeObject.SetActive(false);
 
         AfterResultDetail?.Invoke(this, EventArgs.Empty);
     }

@@ -63,6 +63,11 @@ public class ArithmeticModel
         if (result)
         {
             CorrectAttempt++;
+            ShowPrize = CorrectAttempt % 10 == 0;
+        }
+        else
+        {
+            ShowPrize = false;
         }
 
         SaveAttemptsToStore();
@@ -92,6 +97,7 @@ public class ArithmeticModel
     public int AllAttempt { get; private set; }
     public int CorrectAttempt { get; private set; }
     public int IncorrectAttempt => AllAttempt - CorrectAttempt;
+    public bool ShowPrize { get; private set; }
     public ArithmeticTypes Operations { get; private set; }
 
     private int GenerateTerm()
