@@ -41,7 +41,7 @@ public class ArithmeticPresenter : IDisposable
     private void CheckResult(int result)
     {
         bool isRight = model.CheckResultAndNext(result);
-        view.SetResultDetail(isRight, model.CorrectAttempt, model.IncorrectAttempt);
+        view.SetResultDetail(isRight, model.CorrectAttempt, model.IncorrectAttempt, model.ShowPrize);
     }
 
     private void AfterResultDetail(object sender, EventArgs e)
