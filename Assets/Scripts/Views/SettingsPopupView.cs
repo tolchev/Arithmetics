@@ -20,12 +20,16 @@ public class SettingsPopupView : MonoBehaviour, ISettingsPopupView, IPointerClic
     {
         yesButton.onClick.AddListener(YesButtonClick);
         noButton.onClick.AddListener(NoButtonClick);
+        addition.onValueChanged.AddListener(AdditionChanged);
+        subtraction.onValueChanged.AddListener(SubtractionChanged);
     }
 
     private void OnDestroy()
     {
         yesButton.onClick.RemoveListener(YesButtonClick);
         noButton.onClick.RemoveListener(NoButtonClick);
+        addition.onValueChanged.RemoveListener(AdditionChanged);
+        subtraction.onValueChanged.RemoveListener(SubtractionChanged);
     }
 
     #region IPointerClickHandler
@@ -69,5 +73,21 @@ public class SettingsPopupView : MonoBehaviour, ISettingsPopupView, IPointerClic
     private void NoButtonClick()
     {
         Destroy(gameObject);
+    }
+
+    private void AdditionChanged(bool value)
+    {
+        if (!value && !subtraction.isOn)
+        {
+            subtraction.isOn = true;
+        }
+    }
+
+    private void SubtractionChanged(bool value)
+    {
+        if (!value && !addition.isOn)
+        {
+            addition.isOn = true;
+        }
     }
 }
