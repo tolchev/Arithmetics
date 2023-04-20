@@ -5,5 +5,6 @@
     void SaveAttempts(int allAttempt, int correctAttempt);
 
     ArithmeticTypes Operations { get; }
-    void SaveOperations(ArithmeticTypes operations);
+    ArithmeticValueType ValueType { get; }
+    void SaveProperties(ArithmeticTypes operations, ArithmeticValueType valueType);
 }

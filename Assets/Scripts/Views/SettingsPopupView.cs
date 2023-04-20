@@ -10,6 +10,8 @@ public class SettingsPopupView : MonoBehaviour, ISettingsPopupView, IPointerClic
     [SerializeField]
     private Toggle subtraction;
     [SerializeField]
+    private Toggle moreDifficult;
+    [SerializeField]
     private Toggle resetProgress;
     [SerializeField]
     private Button yesButton;
@@ -56,6 +58,12 @@ public class SettingsPopupView : MonoBehaviour, ISettingsPopupView, IPointerClic
     {
         get => subtraction.isOn;
         set => subtraction.isOn = value;
+    }
+
+    public bool MoreDifficult
+    {
+        get => moreDifficult.isOn;
+        set => moreDifficult.isOn = value;
     }
 
     public bool ResetProgress => resetProgress.isOn;

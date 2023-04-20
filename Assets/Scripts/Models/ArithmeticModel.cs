@@ -1,11 +1,9 @@
+using System.Collections.Generic;
 using System.Linq;
 
 public class ArithmeticModel
 {
-    private readonly int minGeneratedResult;
-    private readonly int maxGeneratedResult;
-    private readonly int minTermValue;
-    private readonly int maxTermValue;
+    private readonly IDictionary<ArithmeticValueType, IArithmeticValue> arithmeticValues;
     private readonly IArithmeticStrategy[] strategies;
     private readonly IRandomService randomService;
     private readonly IStoreService storeService;
@@ -14,13 +12,10 @@ public class ArithmeticModel
 
     private const int maxIterationCount = 30;
 
-    public ArithmeticModel(int minGeneratedResult, int maxGeneratedResult, int minTermValue, int maxTermValue, 
-        IArithmeticStrategy[] strategies, IRandomService randomService, IStoreService storeService)
+    public ArithmeticModel(IArithmeticValue[] arithmeticValues, IArithmeticStrategy[] strategies, 
+        IRandomService randomService, IStoreService storeService)
     {
-        this.minGeneratedResult = minGeneratedResult;
-        this.maxGeneratedResult = maxGeneratedResult;
-        this.minTermValue = minTermValue;
-        this.maxTermValue = maxTermValue;
+        this.arithmeticValues = arithmeticValues.ToDictionary(a => a.ArithmeticValueType);
         this.strategies = strategies;
         this.randomService = randomService ?? throw new System.ArgumentNullException(nameof(randomService));
         this.storeService = storeService ?? throw new System.ArgumentNullException(nameof(storeService));
@@ -28,6 +23,7 @@ public class ArithmeticModel
         AllAttempt = storeService.AllAttempt;
         CorrectAttempt = storeService.CorrectAttempt;
         Operations = storeService.Operations;
+        ValueType = storeService.ValueType;
     }
 
     public string Expression => currentStrategy.GetExpression();
@@ -47,7 +43,9 @@ public class ArithmeticModel
             int termTwo = GenerateTerm();
 
             int result = termOne + termTwo;
-            if (result >= minGeneratedResult && result <= maxGeneratedResult || curIterationCount++ >= maxIterationCount)
+            
+            if (result >= CurrentArithmeticValue.MinGeneratedResult && result <= CurrentArithmeticValue.MaxGeneratedResult 
+                || curIterationCount++ >= maxIterationCount)
             {
                 created = true;
                 currentStrategy.SetTerms(termOne, termTwo);
@@ -83,7 +81,7 @@ public class ArithmeticModel
         SaveAttemptsToStore();
     }
 
-    public void SaveOperations(ArithmeticTypes operations)
+    public void SaveProperties(ArithmeticTypes operations, ArithmeticValueType valueType)
     {
         if (operations == ArithmeticTypes.Unknown)
         {
@@ -91,7 +89,8 @@ public class ArithmeticModel
         }
 
         Operations = operations;
-        storeService.SaveOperations(operations);
+        ValueType = valueType;
+        storeService.SaveProperties(operations, valueType);
     }
 
     public int AllAttempt { get; private set; }
@@ -99,10 +98,13 @@ public class ArithmeticModel
     public int IncorrectAttempt => AllAttempt - CorrectAttempt;
     public bool ShowPrize { get; private set; }
     public ArithmeticTypes Operations { get; private set; }
+    public ArithmeticValueType ValueType { get; private set; }
+
+    private IArithmeticValue CurrentArithmeticValue => arithmeticValues[ValueType];
 
     private int GenerateTerm()
     {
-        return randomService.Range(minTermValue, maxTermValue + 1);
+        return randomService.Range(CurrentArithmeticValue.MinTermValue, CurrentArithmeticValue.MaxTermValue + 1);
     }
 
     private void SaveAttemptsToStore()

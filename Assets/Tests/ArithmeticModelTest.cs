@@ -4,12 +4,18 @@ public class ArithmeticModelTest
 {
     class FakeStoreService : IStoreService
     {
+        public FakeStoreService(ArithmeticTypes operations)
+        {
+            Operations = operations;
+        }
+
         public int AllAttempt => 0;
         public int CorrectAttempt => 0;
         public void SaveAttempts(int allAttempt, int correctAttempt) { }
 
-        public ArithmeticTypes Operations => ArithmeticTypes.Unknown;
-        public void SaveOperations(ArithmeticTypes operations) { }
+        public ArithmeticTypes Operations { get; }
+        public ArithmeticValueType ValueType => ArithmeticValueType.Easy;
+        public void SaveProperties(ArithmeticTypes operations, ArithmeticValueType valueType) { }
     }
 
     class FakeRandomService : IRandomService
@@ -35,8 +41,8 @@ public class ArithmeticModelTest
     [TestCase(9, 1, "9+1=?", 1, false)]
     public void ArithmeticModel_Addition(int termOne, int termTwo, string expression, int result, bool isSuccess)
     {
-        ArithmeticModel model = new ArithmeticModel(10, 20, 1, 10, new IArithmeticStrategy[] { new AdditionStrategy() }, 
-            new FakeRandomService(0, termOne, termTwo), new FakeStoreService());
+        ArithmeticModel model = new ArithmeticModel(new IArithmeticValue[] { new EasyArithmeticValue() }, new IArithmeticStrategy[] { new AdditionStrategy() }, 
+            new FakeRandomService(0, termOne, termTwo), new FakeStoreService(ArithmeticTypes.Addition));
         model.Start();
 
         Assert.AreEqual(expression, model.Expression);
@@ -48,8 +54,8 @@ public class ArithmeticModelTest
     [TestCase(5, 5, "10-5=?", 1, false)]
     public void ArithmeticModel_Subtraction(int termOne, int termTwo, string expression, int result, bool isSuccess)
     {
-        ArithmeticModel model = new ArithmeticModel(10, 20, 1, 10, new IArithmeticStrategy[] { new SubtractionStrategy() },
-            new FakeRandomService(0, termOne, termTwo), new FakeStoreService());
+        ArithmeticModel model = new ArithmeticModel(new IArithmeticValue[] { new EasyArithmeticValue() }, new IArithmeticStrategy[] { new SubtractionStrategy() },
+            new FakeRandomService(0, termOne, termTwo), new FakeStoreService(ArithmeticTypes.Subtraction));
         model.Start();
 
         Assert.AreEqual(expression, model.Expression);

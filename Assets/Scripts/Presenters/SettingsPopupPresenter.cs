@@ -15,6 +15,7 @@ public class SettingsPopupPresenter : IDisposable
         view.OnYesClick += OnYesClick;
         view.Addition = model.Operations.HasFlag(ArithmeticTypes.Addition);
         view.Subtraction = model.Operations.HasFlag(ArithmeticTypes.Subtraction);
+        view.MoreDifficult = model.ValueType == ArithmeticValueType.Hard;
     }
 
     private void OnYesClick(object sender, EventArgs e)
@@ -27,7 +28,7 @@ public class SettingsPopupPresenter : IDisposable
         ArithmeticTypes operations = (view.Addition ? ArithmeticTypes.Addition : ArithmeticTypes.Unknown)
             | (view.Subtraction ? ArithmeticTypes.Subtraction : ArithmeticTypes.Unknown);
 
-        model.SaveOperations(operations);
+        model.SaveProperties(operations, view.MoreDifficult ? ArithmeticValueType.Hard : ArithmeticValueType.Easy);
         onYesCallback();
     }
 
