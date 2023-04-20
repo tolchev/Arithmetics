@@ -55,6 +55,7 @@ public class ArithmeticView : MonoBehaviour, IArithmeticView
         settingsButton.onClick.AddListener(OnSettingsKeyClick);
 
         fpsCalculator = new FPSCalculator();
+        fpsText.enabled = false;
     }
 
     private void Update()
