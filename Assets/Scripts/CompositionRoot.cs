@@ -21,8 +21,9 @@ public class CompositionRoot : MonoBehaviour
 
         var additionStrategy = new AdditionStrategy(arithmeticValue, randomService, prefsStoreService);
         var subtractionStrategy = new SubtractionStrategy(arithmeticValue, randomService, prefsStoreService);
+        var multiplicationStrategy = new MultiplicationStrategy(randomService);
 
-        var arithmeticModel = new ArithmeticModel(new IArithmeticStrategy[] { additionStrategy, subtractionStrategy },
+        var arithmeticModel = new ArithmeticModel(new IArithmeticStrategy[] { additionStrategy, subtractionStrategy, multiplicationStrategy },
             randomService, prefsStoreService);
         arithmeticPresenter = new ArithmeticPresenter(arithmeticView, arithmeticModel);
     }

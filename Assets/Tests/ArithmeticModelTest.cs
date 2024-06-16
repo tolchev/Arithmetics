@@ -74,9 +74,9 @@ public class ArithmeticModelTest
         Assert.AreEqual(isSuccess, model.CheckResultAndNext(result));
     }
 
-    [TestCase(3, 2, "3*2=?", 6, true)]
-    [TestCase(7, 5, "7*5=?", 35, true)]
-    [TestCase(8, 3, "8*3=?", 11, false)]
+    [TestCase(3, 2, "3x2=?", 6, true)]
+    [TestCase(7, 5, "7x5=?", 35, true)]
+    [TestCase(8, 3, "8x3=?", 11, false)]
     public void ArithmeticModel_Multiplication(int termOne, int termTwo, string expression, int result, bool isSuccess)
     {
         var randomService = new FakeRandomService(0, termOne, termTwo);

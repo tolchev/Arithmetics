@@ -1,4 +1,5 @@
 using System;
+using System.Linq;
 using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.UI;
@@ -10,6 +11,8 @@ public class SettingsPopupView : MonoBehaviour, ISettingsPopupView, IPointerClic
     [SerializeField]
     private Toggle subtraction;
     [SerializeField]
+    private Toggle multiplication;
+    [SerializeField]
     private Toggle moreDifficult;
     [SerializeField]
     private Toggle resetProgress;
@@ -18,20 +21,26 @@ public class SettingsPopupView : MonoBehaviour, ISettingsPopupView, IPointerClic
     [SerializeField]
     private Button noButton;
 
+    private Toggle[] operationToggles;
+
     private void Start()
     {
         yesButton.onClick.AddListener(YesButtonClick);
         noButton.onClick.AddListener(NoButtonClick);
-        addition.onValueChanged.AddListener(AdditionChanged);
-        subtraction.onValueChanged.AddListener(SubtractionChanged);
+        addition.onValueChanged.AddListener(OperationTogglesChanged);
+        subtraction.onValueChanged.AddListener(OperationTogglesChanged);
+        multiplication.onValueChanged.AddListener(OperationTogglesChanged);
+
+        operationToggles = new Toggle[] { addition, subtraction, multiplication };
     }
 
     private void OnDestroy()
     {
         yesButton.onClick.RemoveListener(YesButtonClick);
         noButton.onClick.RemoveListener(NoButtonClick);
-        addition.onValueChanged.RemoveListener(AdditionChanged);
-        subtraction.onValueChanged.RemoveListener(SubtractionChanged);
+        addition.onValueChanged.RemoveListener(OperationTogglesChanged);
+        subtraction.onValueChanged.RemoveListener(OperationTogglesChanged);
+        multiplication.onValueChanged.RemoveListener(OperationTogglesChanged);
     }
 
     #region IPointerClickHandler
@@ -60,6 +69,12 @@ public class SettingsPopupView : MonoBehaviour, ISettingsPopupView, IPointerClic
         set => subtraction.isOn = value;
     }
 
+    public bool Multiplication
+    {
+        get => multiplication.isOn;
+        set => multiplication.isOn = value;
+    }
+
     public bool MoreDifficult
     {
         get => moreDifficult.isOn;
@@ -83,17 +98,9 @@ public class SettingsPopupView : MonoBehaviour, ISettingsPopupView, IPointerClic
         Destroy(gameObject);
     }
 
-    private void AdditionChanged(bool value)
+    private void OperationTogglesChanged(bool _)
     {
-        if (!value && !subtraction.isOn)
-        {
-            subtraction.isOn = true;
-        }
-    }
-
-    private void SubtractionChanged(bool value)
-    {
-        if (!value && !addition.isOn)
+        if (operationToggles.All(t => !t.isOn))
         {
             addition.isOn = true;
         }

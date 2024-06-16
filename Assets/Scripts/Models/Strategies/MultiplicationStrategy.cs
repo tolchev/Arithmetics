@@ -15,7 +15,7 @@
 
     public override string GetExpression()
     {
-        return $"{TermOne}*{TermTwo}=?";
+        return $"{TermOne}x{TermTwo}=?";
     }
 
     public override bool GetResult(int value)
