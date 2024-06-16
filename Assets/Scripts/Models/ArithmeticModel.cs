@@ -3,19 +3,15 @@ using System.Linq;
 
 public class ArithmeticModel
 {
-    private readonly IDictionary<ArithmeticValueType, IArithmeticValue> arithmeticValues;
     private readonly IArithmeticStrategy[] strategies;
     private readonly IRandomService randomService;
     private readonly IStoreService storeService;
 
     private IArithmeticStrategy currentStrategy = null;
 
-    private const int maxIterationCount = 30;
-
-    public ArithmeticModel(IArithmeticValue[] arithmeticValues, IArithmeticStrategy[] strategies, 
+    public ArithmeticModel(IArithmeticStrategy[] strategies, 
         IRandomService randomService, IStoreService storeService)
     {
-        this.arithmeticValues = arithmeticValues.ToDictionary(a => a.ArithmeticValueType);
         this.strategies = strategies;
         this.randomService = randomService ?? throw new System.ArgumentNullException(nameof(randomService));
         this.storeService = storeService ?? throw new System.ArgumentNullException(nameof(storeService));
@@ -30,27 +26,11 @@ public class ArithmeticModel
 
     public void Start()
     {
-        bool created = false;
+        var filteredStrategies = strategies.Where(s => Operations.HasFlag(s.ArithmeticType)).ToArray();
+        currentStrategy = filteredStrategies[randomService.Range(0, filteredStrategies.Length)];
 
-        int curIterationCount = 0;
-
-        while (!created)
-        {
-            var filteredStrategies = strategies.Where(s => Operations.HasFlag(s.ArithmeticType)).ToArray();
-            currentStrategy = filteredStrategies[randomService.Range(0, filteredStrategies.Length)];
-
-            int termOne = GenerateTerm();
-            int termTwo = GenerateTerm();
-
-            int result = termOne + termTwo;
-            
-            if (result >= CurrentArithmeticValue.MinGeneratedResult && result <= CurrentArithmeticValue.MaxGeneratedResult 
-                || curIterationCount++ >= maxIterationCount)
-            {
-                created = true;
-                currentStrategy.SetTerms(termOne, termTwo);
-            }
-        }
+        currentStrategy.GenerateTerms(out int termOne, out int termTwo);
+        currentStrategy.SetTerms(termOne, termTwo);
     }
 
     public bool CheckResultAndNext(int value)
@@ -99,13 +79,6 @@ public class ArithmeticModel
     public bool ShowPrize { get; private set; }
     public ArithmeticTypes Operations { get; private set; }
     public ArithmeticValueType ValueType { get; private set; }
-
-    private IArithmeticValue CurrentArithmeticValue => arithmeticValues[ValueType];
-
-    private int GenerateTerm()
-    {
-        return randomService.Range(CurrentArithmeticValue.MinTermValue, CurrentArithmeticValue.MaxTermValue + 1);
-    }
 
     private void SaveAttemptsToStore()
     {

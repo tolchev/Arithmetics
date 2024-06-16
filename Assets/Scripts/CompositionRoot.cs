@@ -15,9 +15,15 @@ public class CompositionRoot : MonoBehaviour
         var keyboardModel = new KeyboardModel(2);
         keyboardPresenter = new KeyboardPresenter(keyboardView, keyboardModel);
 
-        var arithmeticModel = new ArithmeticModel(new IArithmeticValue[] { new EasyArithmeticValue(), new HardArithmeticValue() },
-            new IArithmeticStrategy[] { new AdditionStrategy(), new SubtractionStrategy() }, 
-            new RandomService(), new PrefsStoreService());
+        var arithmeticValue = new IArithmeticValue[] { new EasyArithmeticValue(), new HardArithmeticValue() };
+        var randomService = new RandomService();
+        var prefsStoreService = new PrefsStoreService();
+
+        var additionStrategy = new AdditionStrategy(arithmeticValue, randomService, prefsStoreService);
+        var subtractionStrategy = new SubtractionStrategy(arithmeticValue, randomService, prefsStoreService);
+
+        var arithmeticModel = new ArithmeticModel(new IArithmeticStrategy[] { additionStrategy, subtractionStrategy },
+            randomService, prefsStoreService);
         arithmeticPresenter = new ArithmeticPresenter(arithmeticView, arithmeticModel);
     }
 

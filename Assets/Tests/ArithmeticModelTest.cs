@@ -41,8 +41,14 @@ public class ArithmeticModelTest
     [TestCase(9, 1, "9+1=?", 1, false)]
     public void ArithmeticModel_Addition(int termOne, int termTwo, string expression, int result, bool isSuccess)
     {
-        ArithmeticModel model = new ArithmeticModel(new IArithmeticValue[] { new EasyArithmeticValue() }, new IArithmeticStrategy[] { new AdditionStrategy() }, 
-            new FakeRandomService(0, termOne, termTwo), new FakeStoreService(ArithmeticTypes.Addition));
+        var arithmeticValue = new IArithmeticValue[] { new EasyArithmeticValue() };
+        var randomService = new FakeRandomService(0, termOne, termTwo);
+        var prefsStoreService = new FakeStoreService(ArithmeticTypes.Addition);
+
+        var additionStrategy = new AdditionStrategy(arithmeticValue, randomService, prefsStoreService);
+
+        ArithmeticModel model = new ArithmeticModel(new IArithmeticStrategy[] { additionStrategy },
+            randomService, prefsStoreService);
         model.Start();
 
         Assert.AreEqual(expression, model.Expression);
@@ -54,8 +60,29 @@ public class ArithmeticModelTest
     [TestCase(5, 5, "10-5=?", 1, false)]
     public void ArithmeticModel_Subtraction(int termOne, int termTwo, string expression, int result, bool isSuccess)
     {
-        ArithmeticModel model = new ArithmeticModel(new IArithmeticValue[] { new EasyArithmeticValue() }, new IArithmeticStrategy[] { new SubtractionStrategy() },
-            new FakeRandomService(0, termOne, termTwo), new FakeStoreService(ArithmeticTypes.Subtraction));
+        var arithmeticValue = new IArithmeticValue[] { new EasyArithmeticValue() };
+        var randomService = new FakeRandomService(0, termOne, termTwo);
+        var prefsStoreService = new FakeStoreService(ArithmeticTypes.Subtraction);
+
+        var subtractionStrategy = new SubtractionStrategy(arithmeticValue, randomService, prefsStoreService);
+
+        ArithmeticModel model = new ArithmeticModel(new IArithmeticStrategy[] { subtractionStrategy },
+            randomService, prefsStoreService);
+        model.Start();
+
+        Assert.AreEqual(expression, model.Expression);
+        Assert.AreEqual(isSuccess, model.CheckResultAndNext(result));
+    }
+
+    [TestCase(3, 2, "3*2=?", 6, true)]
+    [TestCase(7, 5, "7*5=?", 35, true)]
+    [TestCase(8, 3, "8*3=?", 11, false)]
+    public void ArithmeticModel_Multiplication(int termOne, int termTwo, string expression, int result, bool isSuccess)
+    {
+        var randomService = new FakeRandomService(0, termOne, termTwo);
+
+        ArithmeticModel model = new ArithmeticModel(new IArithmeticStrategy[] { new MultiplicationStrategy(randomService) },
+            randomService, new FakeStoreService(ArithmeticTypes.Multiplication));
         model.Start();
 
         Assert.AreEqual(expression, model.Expression);

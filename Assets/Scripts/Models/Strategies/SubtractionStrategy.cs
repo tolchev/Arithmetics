@@ -1,5 +1,9 @@
-﻿public class SubtractionStrategy : ArithmeticStrategyBase
+﻿public class SubtractionStrategy : AdditionSubtractionStrategyBase
 {
+    public SubtractionStrategy(IArithmeticValue[] arithmeticValues, IRandomService randomService,
+        IStoreService storeService)
+        : base(arithmeticValues, randomService, storeService) { }
+
     public override string GetExpression()
     {
         return $"{TermOne + TermTwo}-{TermTwo}=?";
